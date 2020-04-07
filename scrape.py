@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import sys
+import csv
 
 #get district number
 district = sys.argv[1]
@@ -50,7 +51,17 @@ url = "https://www.opt-osfns.org/schoolfoodny/meals/default.aspx"
 response = requests.post(url, data=data)
 doc = BeautifulSoup(response.text, 'html.parser')
 
+addresses = []
+
 # Find the anchor tags which contain the meal pick-up location address.
 for anchor in doc.find_all('a'):
   if anchor.parent.name == 'td':
-      print(anchor.text.strip())
+      address_text = anchor.text.strip()
+      addresses.append(address_text)
+
+with open('addresses.csv', mode='w') as addresses_file:
+    addresses_writer = csv.writer(addresses_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+    for address in addresses:
+        addresses_writer.writerow([address])
+
+
