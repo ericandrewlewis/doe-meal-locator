@@ -50,9 +50,7 @@ url = "https://www.opt-osfns.org/schoolfoodny/meals/default.aspx"
 response = requests.post(url, data=data)
 doc = BeautifulSoup(response.text, 'html.parser')
 
-# Grab all of the rows
-row_tags = doc.find_all('tr')
-
-# Let's print the first 5
-for row in row_tags:
-    print(row.text.strip())
+# Find the anchor tags which contain the meal pick-up location address.
+for anchor in doc.find_all('a'):
+  if anchor.parent.name == 'td':
+      print(anchor.text.strip())
